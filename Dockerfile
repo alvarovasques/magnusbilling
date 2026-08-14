@@ -32,7 +32,7 @@ RUN useradd -r -d /var/lib/asterisk -s /usr/sbin/nologin -c 'Asterisk PBX' aster
 
 # ---- Compila Asterisk 20 a partir do tarball do repo ----
 COPY script/asterisk-20.9.2.tar.gz /usr/src/asterisk.tar.gz
-RUN cd /usr/src && tar xzf asterisk.tar.gz && rm asterisk.tar.gz \
+RUN apt-get update && cd /usr/src && tar xzf asterisk.tar.gz && rm asterisk.tar.gz \
     && cd asterisk-20.9.2 \
     && contrib/scripts/install_prereq install \
     && ./configure --with-jansson-bundled --with-pjproject-bundled \
@@ -40,8 +40,7 @@ RUN cd /usr/src && tar xzf asterisk.tar.gz && rm asterisk.tar.gz \
     && menuselect/menuselect \
          --enable res_config_mysql \
          --enable res_odbc \
-         --enable cdr_adaptive_odbc \
-         --enable format_mp3 \
+         --enable cdr_adaptive_odbc \      
          --enable app_macro \
          menuselect.makeopts \
     && make -j"$(nproc)" \
