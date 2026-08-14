@@ -50,12 +50,12 @@ RUN apt-get update && cd /usr/src && tar xzf asterisk.tar.gz && rm asterisk.tar.
     && cd /usr/src && rm -rf asterisk-20.9.2
 
 # ---- Código do MagnusBilling (o SEU fork) ----
-COPY . /var/www/html/mbilling
+RUN mkdir -p /var/www/html/mbilling && wget -q https://magnusbilling.org/download/MagnusBilling8-current.tar.gz -O /tmp/mb8.tgz && tar xzf /tmp/mb8.tgz -C /var/www/html/mbilling && rm -f /tmp/mb8.tgz
 RUN rm -f /var/www/html/index.html \
     && printf "<?php header('Location: ./mbilling'); ?>\n" > /var/www/html/index.php \
     && mkdir -p /var/www/html/mbilling/tmp /var/www/html/mbilling/assets \
     && chown -R www-data:www-data /var/www/html \
-    && chmod +x /var/www/html/mbilling/resources/asterisk/mbilling.php
+    && chmod +x /var/www/html/mbilling/resources/asterisk/mbilling.php && usermod -aG asterisk www-data
 
 # ---- Apache (docroot + módulos) ----
 RUN a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork php8.2 rewrite 2>/dev/null; a2disconf php8.2-fpm 2>/dev/null; true \
