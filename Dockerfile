@@ -58,7 +58,7 @@ RUN rm -f /var/www/html/index.html \
     && chmod +x /var/www/html/mbilling/resources/asterisk/mbilling.php
 
 # ---- Apache (docroot + módulos) ----
-RUN a2enmod php* rewrite 2>/dev/null; a2enmod rewrite \
+RUN a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork php8.2 rewrite 2>/dev/null; a2disconf php8.2-fpm 2>/dev/null; true \
     && sed -ri 's/^Listen 80$/Listen 8080/' /etc/apache2/ports.conf \
     && sed -ri 's/:80>/:8080>/' /etc/apache2/sites-available/000-default.conf \
     && sed -ri 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html#' /etc/apache2/sites-available/000-default.conf
