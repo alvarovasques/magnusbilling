@@ -1,6 +1,6 @@
 .git
 .github
-docker
 .env
 *.log
 tmp/*
+_to_delete
